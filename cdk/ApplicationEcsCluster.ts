@@ -3,33 +3,32 @@ import { Construct } from 'constructs';
 import {ApplicationLoadBalancedFargateService} from 'aws-cdk-lib/aws-ecs-patterns';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import { APP_NAME, HOSTED_ZONE_ID, HOSTED_ZONE_NAME, RESOURCE_DEPLOYMENT_REGION } from "./configuration";
+import { APP_NAME, HOSTED_ZONE_NAME } from "./configuration";
 import { Duration } from "aws-cdk-lib";
-import { IHostedZone, HostedZone } from "aws-cdk-lib/aws-route53";
+import { IHostedZone } from "aws-cdk-lib/aws-route53";
 import { DnsValidatedCertificate } from "aws-cdk-lib/aws-certificatemanager";
 
 export interface AppClusterProps {
     appEnv: string;
     desiredCount: number;
     deploymentEnv: string;
+    hostedZone: IHostedZone;
+    certificate: DnsValidatedCertificate;
+    maxCapacity: number;
+    subDomain: string;
 }
 
 
 export class ApplicationEcsCluster extends Construct {
     private props: AppClusterProps;
     public fargateService: ApplicationLoadBalancedFargateService;
-    public hostedZone: IHostedZone;
     public serviceUrl: string;
 
     constructor(scope: Construct, id: string, props: AppClusterProps) {
         super(scope, id);
         this.props = props;
-        this.hostedZone = HostedZone.fromHostedZoneAttributes(this, `cdkid-${HOSTED_ZONE_ID}`, {
-            zoneName: HOSTED_ZONE_NAME,
-            hostedZoneId: HOSTED_ZONE_ID
-        });
 
-        this.fargateService = new ApplicationLoadBalancedFargateService(this, 'Service', {
+        this.fargateService = new ApplicationLoadBalancedFargateService(this, `Service-${props.deploymentEnv}`, {
             cluster: new ecs.Cluster(this, `${APP_NAME}-FargateAppCluster-${props.deploymentEnv}`),
             memoryLimitMiB: 1024,
             desiredCount: 1,
@@ -37,24 +36,34 @@ export class ApplicationEcsCluster extends Construct {
             taskImageOptions: {
                 image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
             },
-            taskSubnets: {
-                subnets: [ec2.Subnet.fromSubnetId(this, 'subnet', 'VpcISOLATEDSubnet1Subnet80F07FA0')],
-            },
-            loadBalancerName: `${APP_NAME}-ALB`,
+            // taskSubnets: {
+            //     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+            //     subnetGroupName: `taskSubnet-${APP_NAME}`
+            // },
+            loadBalancerName: `${APP_NAME}-ALB-${props.deploymentEnv}`,
             healthCheckGracePeriod: Duration.seconds(60),
             publicLoadBalancer: true,
             redirectHTTP: true,
-            domainZone: this.hostedZone,
-            domainName: HOSTED_ZONE_NAME,
-            certificate: new DnsValidatedCertificate(this, `${APP_NAME}-ACM-Certificate`, {
-                domainName: `*.${HOSTED_ZONE_NAME}`,
-                hostedZone: this.hostedZone,
-                region: RESOURCE_DEPLOYMENT_REGION
-            })
+            domainZone: props.hostedZone,
+            domainName: `${props.subDomain}.${HOSTED_ZONE_NAME}`,
+            certificate: props.certificate
         });
 
         this.serviceUrl = 'https://' + this.fargateService.loadBalancer.loadBalancerDnsName;
-        new cdk.CfnOutput(this, 'ALBURL', { value: this.serviceUrl });
+        new cdk.CfnOutput(this, `ALBURL-${props.deploymentEnv}`, { value: this.serviceUrl });
+
+        const scalableTarget = this.fargateService.service.autoScaleTaskCount({
+            minCapacity: 1,
+            maxCapacity: props.maxCapacity,
+        });
+
+        scalableTarget.scaleOnCpuUtilization('CpuScaling', {
+            targetUtilizationPercent: 50,
+        });
+
+        scalableTarget.scaleOnMemoryUtilization('MemoryScaling', {
+            targetUtilizationPercent: 50,
+        });
     }
 }
 
