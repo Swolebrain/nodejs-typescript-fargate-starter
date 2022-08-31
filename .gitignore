@@ -5,6 +5,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+.idea
+build/*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -39,6 +41,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+cdk/node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -102,3 +105,13 @@ dist
 
 # TernJS port file
 .tern-port
+
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
