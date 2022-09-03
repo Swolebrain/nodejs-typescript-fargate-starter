@@ -28,6 +28,7 @@ export class ApplicationEcsCluster extends Construct {
         super(scope, id);
         this.props = props;
 
+
         this.fargateService = new ApplicationLoadBalancedFargateService(this, `Service-${props.deploymentEnv}`, {
             cluster: new ecs.Cluster(this, `${APP_NAME}-FargateAppCluster-${props.deploymentEnv}`),
             memoryLimitMiB: 1024,
@@ -46,11 +47,13 @@ export class ApplicationEcsCluster extends Construct {
             redirectHTTP: true,
             domainZone: props.hostedZone,
             domainName: `${props.subDomain}.${HOSTED_ZONE_NAME}`,
-            certificate: props.certificate
+            certificate: props.certificate,
         });
 
         this.serviceUrl = 'https://' + this.fargateService.loadBalancer.loadBalancerDnsName;
         new cdk.CfnOutput(this, `ALBURL-${props.deploymentEnv}`, { value: this.serviceUrl });
+
+        this.fargateService.taskDefinition
 
         const scalableTarget = this.fargateService.service.autoScaleTaskCount({
             minCapacity: 1,
