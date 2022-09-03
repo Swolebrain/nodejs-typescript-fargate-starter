@@ -1,6 +1,6 @@
 import express, {Request,Response,Application} from 'express';
 const app:Application = express();
-const PORT = process.env.PORT || 80000;
+const PORT = process.env.PORT || 8000;
 const ENV = process.env.ENV || 'staging';
 
 app.get("/", (req:Request, res:Response):void => {

@@ -3,17 +3,17 @@
 // to identify your cfn resources. Must contain only alphanumeric characters.
 import * as iam from "aws-cdk-lib/aws-iam";
 
-export const APP_NAME = 'MyApp';
+export const APP_NAME = 'KratosService';
+export const ACCOUNT_ID = 'xxxxxxxxx';
 
 // In keeping with the example above, this is a hosted zone that owns acmecorp.com
-export const HOSTED_ZONE_ID = 'xxxxxx';
-export const HOSTED_ZONE_NAME = 'swolebrain.com';
+export const HOSTED_ZONE_ID = 'xxxxxxx';
+export const HOSTED_ZONE_NAME = 'xx.com';
 export const STAGING_SUBDOMAIN = 'staging-api';
 export const PROD_SUBDOMAIN = 'api';
 
-// Some resources (eg ACM certs) are deployed to a specific region even if the CDK deployment is running in its own
-// region. That's what this string is for
-export const RESOURCE_DEPLOYMENT_REGION = 'us-east-2';
+// This region controls where your CDK resources are created and also separately controls where the ACM cert gets created.
+export const RESOURCE_DEPLOYMENT_REGION = 'us-east-2'; // or chosen region from step 5
 
 export const taskExecutionIamPoliciesJSON = [
     {

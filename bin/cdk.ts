@@ -2,7 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { App } from '../cdk/app';
-import { APP_NAME } from "../cdk/configuration";
+import { APP_NAME, RESOURCE_DEPLOYMENT_REGION, ACCOUNT_ID } from "../cdk/configuration";
 
 const app = new cdk.App();
 new App(app, `${APP_NAME}-Infrastructure`, {
@@ -16,7 +16,7 @@ new App(app, `${APP_NAME}-Infrastructure`, {
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */
-  env: { account: 'xxxxx', region: 'us-east-2' },
+  env: { account: ACCOUNT_ID, region: RESOURCE_DEPLOYMENT_REGION },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
