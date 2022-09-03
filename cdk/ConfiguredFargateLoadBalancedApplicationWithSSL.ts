@@ -7,7 +7,7 @@ import { APP_NAME, HOSTED_ZONE_NAME } from "./configuration";
 import { IHostedZone } from "aws-cdk-lib/aws-route53";
 import { DnsValidatedCertificate } from "aws-cdk-lib/aws-certificatemanager";
 import * as iam from "aws-cdk-lib/aws-iam";
-import { ApplicationProtocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { Cluster } from "aws-cdk-lib/aws-ecs";
 
 export interface AppClusterProps {
     appEnv: string;
@@ -22,18 +22,21 @@ export interface AppClusterProps {
 }
 
 
-export class FargateService extends Construct {
+export class ConfiguredFargateLoadBalancedApplicationWithSSL extends Construct {
     private props: AppClusterProps;
     public fargateService: ApplicationLoadBalancedFargateService;
     public serviceUrl: string;
+    public readonly cluster: Cluster;
 
     constructor(scope: Construct, id: string, props: AppClusterProps) {
         super(scope, id);
         this.props = props;
 
-
+        this.cluster = new ecs.Cluster(this, `Cluster-${props.deploymentEnv}`, {
+            clusterName: `${APP_NAME}-${props.deploymentEnv}`
+        });
         this.fargateService = new ApplicationLoadBalancedFargateService(this, `Service-${props.deploymentEnv}`, {
-            cluster: new ecs.Cluster(this, `Cluster-${props.deploymentEnv}`),
+            cluster: this.cluster,
             memoryLimitMiB: 1024,
             desiredCount: 1,
             cpu: 512,
@@ -72,7 +75,6 @@ export class FargateService extends Construct {
         props.taskRolePolicies.forEach(iamPolicy => {
             this.fargateService.taskDefinition.addToTaskRolePolicy(iamPolicy);
         });
-
 
     }
 }

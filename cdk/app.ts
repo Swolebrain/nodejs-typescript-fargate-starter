@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { FargateService } from "./FargateService";
+import { ConfiguredFargateLoadBalancedApplicationWithSSL } from "./ConfiguredFargateLoadBalancedApplicationWithSSL";
 import {
   APP_NAME,
   HOSTED_ZONE_ID,
@@ -11,6 +11,8 @@ import {
 import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { DnsValidatedCertificate } from "aws-cdk-lib/aws-certificatemanager";
 import * as iam from "aws-cdk-lib/aws-iam";
+import setupCodeBuild from "./setupCodeBuild";
+import setupPipeline from "./setupPipeline";
 
 
 export class App extends cdk.Stack {
@@ -45,7 +47,7 @@ export class App extends cdk.Stack {
         new iam.PolicyStatement(policyJson)
     );
 
-    const ecsClusterStaging = new FargateService(this, `${APP_NAME}-cluster-staging`, {
+    const fargateAppStaging = new ConfiguredFargateLoadBalancedApplicationWithSSL(this, `${APP_NAME}-staging`, {
       appEnv: '',
       desiredCount: 1,
       deploymentEnv: 'staging',
@@ -57,7 +59,7 @@ export class App extends cdk.Stack {
       taskRolePolicies
     });
 
-    const ecsClusterProd = new FargateService(this, `${APP_NAME}-cluster-prod`, {
+    const fargateAppProd = new ConfiguredFargateLoadBalancedApplicationWithSSL(this, `${APP_NAME}-prod`, {
       appEnv: '',
       desiredCount: 1,
       deploymentEnv: 'prod',
@@ -68,5 +70,9 @@ export class App extends cdk.Stack {
       executionRolePolicy,
       taskRolePolicies
     });
+
+    const {codebuildProject} = setupCodeBuild(this, fargateAppStaging.cluster, fargateAppProd.cluster);
+
+    setupPipeline(this, codebuildProject, fargateAppStaging.fargateService.service, fargateAppProd.fargateService.service);
   };
 }
