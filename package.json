@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "ts-node appserver/server.ts",
-    "dev": "ts-node-dev --respawn appserver/server.ts"
+    "start": "ts-node appserver/src/server.ts",
+    "dev": "ts-node-dev --respawn appserver/src/server.ts"
   },
   "repository": {
     "type": "git",
