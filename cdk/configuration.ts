@@ -9,6 +9,7 @@ export const HOSTED_ZONE_ID = 'Z31BB1JUPLX7L0';
 export const HOSTED_ZONE_NAME = 'swolebrain.com';
 export const GH_USERNAME = 'swolebrain';
 export const GH_REPO_NAME = 'nodejs-typescript-fargate-starter'; // repo name under YOUR account
+export const CODESTAR_CONNECTION_ARN = 'arn:aws:codestar-connections:us-east-1:891672395302:connection/81a7cc54-d115-4c6b-a9d8-b59c4fc38617';
 
 /**
  * Settings below here don't have to change, but you might want to
