@@ -43,7 +43,8 @@ export class ConfiguredFargateLoadBalancedApplicationWithSSL extends Construct {
             taskImageOptions: {
                 image: ecs.ContainerImage.fromRegistry("swolebrain/node-web-app:latest"),
                 environment: {
-                    PORT: '80' // for express to know about it
+                    PORT: '80', // for express to know about it
+                    ENV: `${props.deploymentEnv}`
                 },
             },
             loadBalancerName: `${APP_NAME}-ALB-${props.deploymentEnv}`,
