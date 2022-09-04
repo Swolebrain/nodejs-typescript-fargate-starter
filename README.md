@@ -20,7 +20,7 @@ If you left that unchanged, then the above command will wipe out your applicatio
 
 1. Follow the steps to get started with cdk (installing pre-requisites and boostrapping). You should probably read [this whole thing](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html).
 2. Fork this repo into your github account
-3. Get a github token that can push to your repos
+3. Get a github token that can push to your repos. It needs to have the following scopes: `admin:repo_hook` and  `repo`. Also consider adding `workflow` in case you wanna modify the setup to make codepipelines able to trigger gh actions.
 4. Decide on a name for your app. Let's say you decide to call it KratosService. Put that name in `cdk/configuration.ts`
 5. Choose a region for your service. If you don't live near the Eastern united states, then choose whatever's closest to you or your customers. If you do live near the Eastern USA, then I recommend you keep us-east-2.
 6. Create a secret in secrets manager to store your github token (this is for code deploy to be able to receive events from github). You can do this by `aws secretsmanager create-secret --name YOUR_APP_NAME_FROM_STEP_4/gh-token --secret-string <GITHUB-TOKEN> --region CHOSEN_REGION_FROM_STEP_5`

@@ -15,7 +15,6 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
         repo: GH_REPO_NAME,
         branch: GH_BRANCH,
         oauthToken: cdk.SecretValue.secretsManager(`${APP_NAME}/gh-token`),
-        //oauthToken: cdk.SecretValue.plainText('<plain-text>'),
         output: sourceOutput
     });
 
