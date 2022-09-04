@@ -22,7 +22,7 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
         actionName: 'CodeBuild',
         project: project,
         input: sourceOutput,
-        outputs: [buildOutput], // optional
+        outputs: [buildOutput],
     });
 
     const manualApprovalAction = new codepipeline_actions.ManualApprovalAction({
@@ -32,13 +32,13 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
     const deployActionStaging = new codepipeline_actions.EcsDeployAction({
         actionName: 'DeployActionStaging',
         service: fargateServiceStaging,
-        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
+        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions-staging.json`)
     });
 
     const deployActionProd = new codepipeline_actions.EcsDeployAction({
         actionName: 'DeployActionProd',
         service: fargateServiceProd,
-        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
+        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions-prod.json`)
     });
 
     const pipeline = new codepipeline.Pipeline(stack, `${APP_NAME}-Pipeline`, {
