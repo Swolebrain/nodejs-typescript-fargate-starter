@@ -52,7 +52,8 @@ export class ConfiguredFargateLoadBalancedApplicationWithSSL extends Construct {
             redirectHTTP: true,
             domainZone: props.hostedZone,
             domainName: `${props.subDomain}.${HOSTED_ZONE_NAME}`,
-            certificate: props.certificate
+            certificate: props.certificate,
+            serviceName: `${APP_NAME}-${props.deploymentEnv}`
         });
 
         this.serviceUrl = 'https://' + this.fargateService.loadBalancer.loadBalancerDnsName;

@@ -14,7 +14,7 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
         owner: GH_USERNAME,
         repo: GH_REPO_NAME,
         branch: GH_BRANCH,
-        oauthToken: cdk.SecretValue.secretsManager(`${APP_NAME}-gh-token`),
+        oauthToken: cdk.SecretValue.secretsManager(`${APP_NAME}/gh-token`),
         //oauthToken: cdk.SecretValue.plainText('<plain-text>'),
         output: sourceOutput
     });
@@ -42,7 +42,7 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
         imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
     });
 
-    const pipeline = new codepipeline.Pipeline(stack, 'MyECSPipeline', {
+    const pipeline = new codepipeline.Pipeline(stack, `${APP_NAME}-Pipeline`, {
         stages: [
             {
                 stageName: 'Source',
