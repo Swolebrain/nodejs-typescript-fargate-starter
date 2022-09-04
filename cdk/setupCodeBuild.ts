@@ -50,16 +50,15 @@ export default function setupEcrAndCodeBuild(stack: cdk.Stack, stagingCluster: e
                     commands: [
                         'echo "In Post-Build Stage"',
                         'cd ..',
-                        `printf '[{\"name\":\"${APP_NAME}-staging\",\"imageUri\":\"%s\"}]' $ECR_REPO_URI:$TAG > imagedefinitions-staging.json`,
-                        `printf '[{\"name\":\"${APP_NAME}-prod\",\"imageUri\":\"%s\"}]' $ECR_REPO_URI:$TAG > imagedefinitions-prod.json`,
-                        "pwd; ls -al; cat imagedefinitions-staging.json"
+                        // default container name is "web"
+                        `printf '[{\"name\":\"web\",\"imageUri\":\"%s\"}]' $ECR_REPO_URI:$TAG > imagedefinitions.json`,
+                        "pwd; ls -al; cat imagedefinitions.json"
                     ]
                 }
             },
             artifacts: {
                 files: [
-                    'imagedefinitions-staging.json',
-                    'imagedefinitions-prod.json',
+                    'imagedefinitions.json',
                 ]
             }
         })

@@ -32,13 +32,13 @@ export default function setupPipeline(stack: cdk.Stack, project: codebuild.Proje
     const deployActionStaging = new codepipeline_actions.EcsDeployAction({
         actionName: 'DeployActionStaging',
         service: fargateServiceStaging,
-        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions-staging.json`)
+        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
     });
 
     const deployActionProd = new codepipeline_actions.EcsDeployAction({
         actionName: 'DeployActionProd',
         service: fargateServiceProd,
-        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions-prod.json`)
+        imageFile: new codepipeline.ArtifactPath(buildOutput, `imagedefinitions.json`)
     });
 
     const pipeline = new codepipeline.Pipeline(stack, `${APP_NAME}-Pipeline`, {

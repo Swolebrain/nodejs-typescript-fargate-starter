@@ -60,18 +60,18 @@ export class ConfiguredFargateLoadBalancedApplicationWithSSL extends Construct {
         this.serviceUrl = 'https://' + this.fargateService.loadBalancer.loadBalancerDnsName;
         new cdk.CfnOutput(this, `ALBURL-${props.deploymentEnv}`, { value: this.serviceUrl });
 
-        const scalableTarget = this.fargateService.service.autoScaleTaskCount({
-            minCapacity: 1,
-            maxCapacity: props.maxCapacity,
-        });
-
-        scalableTarget.scaleOnCpuUtilization('CpuScaling', {
-            targetUtilizationPercent: 50,
-        });
-
-        scalableTarget.scaleOnMemoryUtilization('MemoryScaling', {
-            targetUtilizationPercent: 50,
-        });
+        // const scalableTarget = this.fargateService.service.autoScaleTaskCount({
+        //     minCapacity: 1,
+        //     maxCapacity: props.maxCapacity,
+        // });
+        //
+        // scalableTarget.scaleOnCpuUtilization('CpuScaling', {
+        //     targetUtilizationPercent: 50,
+        // });
+        //
+        // scalableTarget.scaleOnMemoryUtilization('MemoryScaling', {
+        //     targetUtilizationPercent: 50,
+        // });
 
         this.fargateService.taskDefinition.addToExecutionRolePolicy(props.executionRolePolicy);
         props.taskRolePolicies.forEach(iamPolicy => {
