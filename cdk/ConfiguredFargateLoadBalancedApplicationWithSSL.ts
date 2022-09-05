@@ -60,6 +60,9 @@ export class ConfiguredFargateLoadBalancedApplicationWithSSL extends Construct {
         this.serviceUrl = 'https://' + this.fargateService.loadBalancer.loadBalancerDnsName;
         new cdk.CfnOutput(this, `ALBURL-${props.deploymentEnv}`, { value: this.serviceUrl });
 
+        // Set connection draining timeout to 5s since this is a web service. Default is very obnoxious 300s
+        this.fargateService.targetGroup.setAttribute('deregistration_delay.timeout_seconds', '5');
+
         // const scalableTarget = this.fargateService.service.autoScaleTaskCount({
         //     minCapacity: 1,
         //     maxCapacity: props.maxCapacity,
