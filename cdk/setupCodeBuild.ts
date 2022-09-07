@@ -3,23 +3,13 @@ import * as codebuild from "aws-cdk-lib/aws-codebuild";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as iam from "aws-cdk-lib/aws-iam";
-import { APP_NAME, GH_BRANCH, GH_REPO_NAME, GH_USERNAME } from "./configuration";
+import { APP_NAME } from "./configuration";
 
 export default function setupEcrAndCodeBuild(stack: cdk.Stack, stagingCluster: ecs.Cluster, prodCluster: ecs.Cluster) {
     const ecrRepo = new ecr.Repository(stack, 'EcrRepo');
 
-    const gitHubSource = codebuild.Source.gitHub({
-        owner: GH_USERNAME,
-        repo: GH_REPO_NAME,
-        webhook: true, // optional, default: true if `webhookFilteres` were provided, false otherwise
-        webhookFilters: [
-            codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(GH_BRANCH),
-        ], // optional, by default all pushes and Pull Requests will trigger a build
-    });
-
     const codebuildProject = new codebuild.Project(stack, `${APP_NAME}`, {
         projectName: `${stack.stackName}`,
-        source: gitHubSource,
         environment: {
             buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_2,
             privileged: true
