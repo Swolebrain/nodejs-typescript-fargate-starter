@@ -9,7 +9,7 @@ export const HOSTED_ZONE_ID = 'Z31BB1JUPLX7L0';
 export const HOSTED_ZONE_NAME = 'swolebrain.com';
 export const GH_USERNAME = 'swolebrain';
 export const GH_REPO_NAME = 'nodejs-typescript-fargate-starter'; // repo name under YOUR account
-export const CODESTAR_CONNECTION_ARN = 'arn:aws:codestar-connections:us-east-2:891672395302:connection/cc68de72-bad3-4c54-ae38-a8963a5e2889';
+export const CODESTAR_CONNECTION_ARN = 'arn:aws:codestar-connections:us-east-1:891672395302:connection/85b73ab4-ce1a-45db-ba4d-462b271f05cc';
 
 /**
  * Settings below here don't have to change, but you might want to
@@ -19,7 +19,7 @@ export const GH_BRANCH = 'main';
 export const STAGING_SUBDOMAIN = 'staging-api';
 export const PROD_SUBDOMAIN = 'api';
 // This region controls where your CDK resources are created and also separately controls where the ACM cert gets created.
-export const RESOURCE_DEPLOYMENT_REGION = 'us-east-2'; // or chosen region from step 5
+export const RESOURCE_DEPLOYMENT_REGION = 'us-east-1'; // or chosen region from step 5
 
 // permissions your fargate task will have
 export const taskExecutionIamPoliciesJSON = [
