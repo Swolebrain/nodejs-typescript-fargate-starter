@@ -5,7 +5,7 @@ const ENV = process.env.ENV || 'staging';
 
 // Do not delete this endpoint or put it under auth. This is the health check.
 app.get("/", (req:Request, res:Response):void => {
-    res.send(`<h3>App is working. This is ${ENV} env</h3>`);
+    res.send(`<h3>App is working. This is ${ENV} env</h3><span>09072022T0642</span>`);
 });
 
 app.listen(PORT, ():void => {
