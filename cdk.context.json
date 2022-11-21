@@ -11,5 +11,9 @@
     "us-east-1d",
     "us-east-1e",
     "us-east-1f"
-  ]
+  ],
+  "hosted-zone:account=891672395302:domainName=swolebrain.com:region=us-east-1": {
+    "Id": "/hostedzone/Z31BB1JUPLX7L0",
+    "Name": "swolebrain.com."
+  }
 }

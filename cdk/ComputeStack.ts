@@ -15,7 +15,7 @@ import setupCodeBuild from "./setupCodeBuild";
 import setupPipeline from "./setupPipeline";
 
 
-export class App extends cdk.Stack {
+export class ComputeStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
